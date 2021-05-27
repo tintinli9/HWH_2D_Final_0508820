@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -20,6 +21,14 @@ public class Player : MonoBehaviour
     public AudioSource aud;
     [Header("攻擊音效")]
     public AudioClip soundAttack;
+    [Header("攻擊力"), Range(0, 100)]
+    public float attack = 20;
+    [Header("血量")]
+    public float hp = 200;
+    [Header("血條系統")]
+    public HpManager hpManager;
+
+    private float hpMax;
 
     private void OnDrawGizmos()
     {
@@ -29,6 +38,8 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        if (isDEAD) return;
+
         float h = joystick.Horizontal;
 
         tra.Translate(h * speed * Time.deltaTime, 0, 0);
@@ -38,24 +49,39 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
+        if (isDEAD) return;
+
         aud.PlayOneShot(soundAttack, 0.3f);
 
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, rangeAttack, -transform.up, 0, 1 << 8);
+        if (hit && hit.collider.tag == "敵人") hit.collider.GetComponent<Enemy>().Hit(attack);
     }
 
-    private void Hit()
+    public void Hit(float damage)
     {
+        hp -= damage;
+        hpManager.UpdateHpbar(hp, hpMax);
+        StartCoroutine(hpManager.ShowDamage(damage));
 
+        if (hp <= 0) Dead();
     }
 
     private void Dead()
     {
+        hp = 0;
+        isDEAD = true;
+        Invoke("Replay",2);
+        ani.SetTrigger("死亡");
+    }
 
+    private void Replay()
+    {
+        SceneManager.LoadScene("遊戲場景");
     }
 
     private void Start()
     {
-
+        hpMax = hp;
     }
 
     private void Update()
@@ -63,5 +89,9 @@ public class Player : MonoBehaviour
         Move();
     }
 
+    public void Test()
+    {
+        ani.SetTrigger("攻擊");
+    }
 }
 
