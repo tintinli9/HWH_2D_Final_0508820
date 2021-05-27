@@ -17,12 +17,12 @@ public class HpManager : MonoBehaviour
     public IEnumerator ShowDamage(float damage)
     {
         RectTransform rect = Instantiate(rectDamage, transform);
-        rect.anchoredPosition = new Vector2(-200, -50);
+        rect.anchoredPosition = new Vector2(-290, 90);
         rect.GetComponent<Text>().text = damage.ToString();
 
         float y = rect.anchoredPosition.y;
 
-        while (y < 100)
+        while (y < 130)
         {
             y += 10;
             rect.anchoredPosition = new Vector2(0, y);
