@@ -2219,7 +2219,7 @@ MonoBehaviour:
   speed: 2
   ani: {fileID: 2024380079}
   cdAttack: 1.5
-  attack: 100
+  attack: 20
   aud: {fileID: 2024380085}
   soundAttack: {fileID: 8300000, guid: c31c5c3a0d24cbf42be9806cc8d587a4, type: 3}
   hp: 200
